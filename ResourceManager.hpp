@@ -10,11 +10,14 @@ public:
     ResourceManager() : resource_ptr(new Resource()) {}
     double get() { return resource_ptr->get(); }
     ~ResourceManager() { delete resource_ptr; }
-    ResourceManager(const ResourceManager& other) = delete;
-    ResourceManager& operator=(const ResourceManager& other) = delete;
-    ResourceManager(ResourceManager&& other) noexcept : resource_ptr(other.resource_ptr)
+    ResourceManager(const ResourceManager& other) : resource_ptr(new Resource(*other.resource_ptr)) {};
+    ResourceManager& operator=(const ResourceManager& other)
     {
-        other.resource_ptr = nullptr;
+        if (this != &other) {
+            Resource* temp_resource = new Resource(*other.resource_ptr);
+            resource_ptr = temp_resource;
+        }
+        return *this;
     }
     ResourceManager& operator=(ResourceManager&& other) noexcept
     {
